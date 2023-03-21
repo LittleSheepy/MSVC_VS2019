@@ -450,6 +450,7 @@ public:
     using difference_type = typename _Alty_traits::difference_type;
 
 private:
+    // conditional_t 条件 true 用第一个 false 用第二个
     using _Scary_val = _Vector_val<conditional_t<_Is_simple_alloc_v<_Alty>, _Simple_types<_Ty>,
         _Vec_iter_types<_Ty, size_type, difference_type, pointer, const_pointer, _Ty&, const _Ty&>>>;
 
@@ -458,9 +459,15 @@ public:
     using const_iterator         = _Vector_const_iterator<_Scary_val>;
     using reverse_iterator       = _STD reverse_iterator<iterator>;
     using const_reverse_iterator = _STD reverse_iterator<const_iterator>;
-
+    // noexcept 函数不抛异常  noexcept(true) 不抛异常  noexcept(false) 抛异常，即相当于没有这个设置
+    // is_nothrow_default_constructible_v可构造且默认构造不抛异常
+    // _Zero_then_variadic_args_t 空结构体
+    // _Mypair(_Zero_then_variadic_args_t{})  以空类作为第一个参数()来实例化_Mypair，这个参数后面会初始化
     _CONSTEXPR20_CONTAINER vector() noexcept(is_nothrow_default_constructible_v<_Alty>)
         : _Mypair(_Zero_then_variadic_args_t{}) {
+        // _Mypair._Myval2 : _Vector_val<_Simple_types<int>>
+        // #define _GET_PROXY_ALLOCATOR(_Alty, _Al) static_cast<_Rebind_alloc_t<_Alty, _Container_proxy>>(_Al)
+        // static_cast<_Rebind_alloc_t<allocator<int>, _Container_proxy>>(_Getal())     _Getal():_Alty
         _Mypair._Myval2._Alloc_proxy(_GET_PROXY_ALLOCATOR(_Alty, _Getal()));
     }
 

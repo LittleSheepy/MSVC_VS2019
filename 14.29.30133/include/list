@@ -1813,9 +1813,7 @@ private:
         cout << "_Al:" << typeid(_Al).name() << endl;
         // _Newhead = _List_node<int,void * __ptr64> * __ptr64
         auto _Newhead = _Al.allocate(1);
-        cout << "_Newhead:" << typeid(_Newhead).name() << endl;
         // _Newhead->_Next = _List_node<int,void * __ptr64> * __ptr64 
-        cout << "_Newhead->_Next:" << typeid(_Newhead->_Next).name() << endl;
         _Construct_in_place(_Newhead->_Next, _Newhead);
         _Construct_in_place(_Newhead->_Prev, _Newhead);
         _Mypair._Myval2._Myhead = _Newhead;
