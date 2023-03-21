@@ -660,7 +660,7 @@ struct _List_node_insert_op2 {
         if (_First == _Last) { // throws
             return;
         }
-
+        //_Newnode	{_Al=allocator _Ptr=0x0000000000000000 <NULL> }	 _Alloc_construct_ptr< allocator<_List_node<int,void *>> >
         _Alloc_construct_ptr<_Alnode> _Newnode(_Al);
         if (_Added == 0) {
             _Newnode._Allocate(); // throws
@@ -749,9 +749,9 @@ struct _List_node_insert_op2 {
 
 private:
     _Alnode& _Al;
-    size_type _Added; // if 0, the values of _Head and _Tail are indeterminate
-    pointer _Tail; // points to the most recently appended element; it doesn't have _Next constructed
-    pointer _Head; // points to the first appended element; it doesn't have _Prev constructed
+    size_type _Added; // if 0, the values of _Head and _Tail are indeterminate  如果为0，则_Head和_Tail的值是不确定的
+    pointer _Tail; // points to the most recently appended element; it doesn't have _Next constructed 指向最近追加的元素;它没有构造_Next
+    pointer _Head; // points to the first appended element; it doesn't have _Prev constructed 指向第一个附加的元素;它没有构造_Prev
 };
 
 template <class _Traits>
