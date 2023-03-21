@@ -1,4 +1,4 @@
-// list standard header
+﻿// list standard header
 
 // Copyright (c) Microsoft Corporation.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
@@ -7,6 +7,7 @@
 #ifndef _LIST_
 #define _LIST_
 #include <yvals_core.h>
+#include <iostream>
 #if _STL_COMPILER_PREPROCESSOR
 #include <xmemory>
 
@@ -758,9 +759,14 @@ private:
     template <class _Traits>
     friend bool _Hash_equal(const _Hash<_Traits>&, const _Hash<_Traits>&);
 
+
+    // 对于list<int>, _Alty = allocator<int>
     using _Alty          = _Rebind_alloc_t<_Alloc, _Ty>;
     using _Alty_traits   = allocator_traits<_Alty>;
-    using _Node          = _List_node<_Ty, typename allocator_traits<_Alloc>::void_pointer>;
+    // struct std::_List_node<int,void * __ptr64>
+    // allocator_traits<_Alloc>::void_pointer = void*
+    using _Node          = _List_node<_Ty, typename allocator_traits<_Alloc>::void_pointer>;  // 就是一个_Node类
+    // _Alnode = allocator<_Node>
     using _Alnode        = _Rebind_alloc_t<_Alloc, _Node>;
     using _Alnode_traits = allocator_traits<_Alnode>;
     using _Nodeptr       = typename _Alnode_traits::pointer;
@@ -793,6 +799,8 @@ public:
     using const_reverse_iterator = _STD reverse_iterator<const_iterator>;
 
     list() : _Mypair(_Zero_then_variadic_args_t{}) {
+        //cout << typeid(_Node).name() << endl;
+        //cout << typeid(_Alnode).name() << endl;
         _Alloc_sentinel_and_proxy();
     }
 
@@ -1760,10 +1768,54 @@ private:
     }
 
     void _Alloc_sentinel_and_proxy() {
-        auto&& _Alproxy = _GET_PROXY_ALLOCATOR(_Alnode, _Getal());
-        _Container_proxy_ptr<_Alty> _Proxy(_Alproxy, _Mypair._Myval2);
+        // _Alnode& _Getal(){}   _Alnode
+        // _Alnode = allocator<_Node>
+        //cout << _Is_default_allocator<_Alloc>::value << endl;
+        //cout << _Is_default_allocator<_Alnode>::value << endl;
+        // static_cast<_Rebind_alloc_t<_Alty, _Container_proxy>>(_Al)
+
+        /**** step1 获得 allocator<_Container_proxy> ****/
+        /////////////old//////////////////
+        //auto&& _Alproxy = _GET_PROXY_ALLOCATOR(_Alnode, _Getal());      // std::allocator<std::_Container_proxy> &&
+        /////////////new//////////////////
+        // _Alproxy_cls = allocator<_Container_proxy>
+        using _Alproxy_cls = _Rebind_alloc_t<_Alnode, _Container_proxy>;
+        using _Alproxy_cls2 = allocator< _Container_proxy >;
+        // cout << typeid(_Getal()::value_type).name() << endl;
+        // _Mypair = _Compressed_pair< allocator< _List_node<int,void *> >, _List_val< _List_simple_types<int> >, 1>
+        // _Alnode& = allocator< _List_node<int,void *> >
+        // _Alproxy_left = allocator<_Container_proxy>
+        auto _Alproxy_left = static_cast<_Alproxy_cls2>(_Mypair);
+        // auto _Alproxy_left = static_cast<_Alproxy_cls>(_Getal());
+        // auto _Alproxy_left = static_cast<_Alproxy_cls>(((_Alnode)(_Mypair)));
+        // _Alproxy = allocator<_Container_proxy> &
+        auto&& _Alproxy = _Alproxy_left;
+        //cout << typeid(_Alproxy_cls).name() << endl;                        // allocator<_Container_proxy>
+        //cout << typeid(_Alproxy_left).name() << endl;                       // allocator<_Container_proxy>
+        /////////////new//////////////////
+
+        /**** step2 获得 allocator<_Container_proxy> ****/
+        // _Container_proxy_ptr = _Container_proxy_ptr12<_Rebind_alloc_t<_Alloc, _Container_proxy>>;
+        // _Container_proxy_ptr = _Container_proxy_ptr12< allocator<_Container_proxy> >;
+        // 类型
+        // _Alproxy = allocator<_Container_proxy> &
+        // _Mypair._Myval2 = _List_val<_List_simple_types<int>>
+        // _Proxy = _Container_proxy_ptr12< allocator<_Container_proxy> >
+        /////////////old//////////////////
+        //_Container_proxy_ptr<_Alty> _Proxy(_Alproxy, _Mypair._Myval2);
+        /////////////new//////////////////
+        // 参数类型: (allocator<_Container_proxy>, _List_val<_List_simple_types<int>>)
+        _Container_proxy_ptr12< _Alproxy_cls > _Proxy(_Alproxy, _Mypair._Myval2);
+        /////////////new//////////////////
+        //cout << typeid(_Proxy).name() << endl;                       
+        // _Al = allocator< _List_node<int,void * __ptr64> >
         auto& _Al     = _Getal();
+        cout << "_Al:" << typeid(_Al).name() << endl;
+        // _Newhead = _List_node<int,void * __ptr64> * __ptr64
         auto _Newhead = _Al.allocate(1);
+        cout << "_Newhead:" << typeid(_Newhead).name() << endl;
+        // _Newhead->_Next = _List_node<int,void * __ptr64> * __ptr64 
+        cout << "_Newhead->_Next:" << typeid(_Newhead->_Next).name() << endl;
         _Construct_in_place(_Newhead->_Next, _Newhead);
         _Construct_in_place(_Newhead->_Prev, _Newhead);
         _Mypair._Myval2._Myhead = _Newhead;

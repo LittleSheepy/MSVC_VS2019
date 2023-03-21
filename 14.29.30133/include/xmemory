@@ -997,10 +997,12 @@ struct _Iterator_base0 {
 struct _Container_base12;
 struct _Container_proxy { // store head of iterator chain and back pointer
     _CONSTEXPR20_CONTAINER _Container_proxy() noexcept = default;
-    _CONSTEXPR20_CONTAINER _Container_proxy(_Container_base12* _Mycont_) noexcept : _Mycont(_Mycont_) {}
+    _CONSTEXPR20_CONTAINER _Container_proxy(_Container_base12* _Mycont_) noexcept : _Mycont(_Mycont_) {
+        printf(" running _Container_proxy 构造函数\n");
+    }
 
     const _Container_base12* _Mycont       = nullptr;
-    mutable _Iterator_base12* _Myfirstiter = nullptr;
+    mutable _Iterator_base12* _Myfirstiter = nullptr;  // mutalbe 可变的
 };
 
 struct _Container_base12 {
@@ -1277,11 +1279,26 @@ struct _Container_proxy_ptr12 : _Basic_container_proxy_ptr12 {
         _Ptr = _Unfancy(_Al_.allocate(1));
         _Construct_in_place(*_Ptr);
     }
-
+    // 1.申请内存 _Container_proxy
+    // 2. 构造函数 _Mycont为参数
     _CONSTEXPR20_CONTAINER _Container_proxy_ptr12(_Alloc& _Al_, _Container_base12& _Mycont) : _Al(_Al_) {
-        // create a new _Container_proxy pointing at _Mycont
-        _Ptr = _Unfancy(_Al_.allocate(1));
-        _Construct_in_place(*_Ptr, _STD addressof(_Mycont));
+        // create a new _Container_proxy pointing at _Mycont 创建一个新的指向_Mycont的_Container_proxy
+        //>>>> list<int>
+        // allocator<_Container_proxy>.allocate(1)
+        // _Container_proxy* _Ptr;
+        // >>>>> _Proxy(_Alproxy, _Mypair._Myval2)
+        // allocator<_Container_proxy>
+        _Ptr = _Unfancy(_Al_.allocate(1));                          // 申请1个_Container_proxy大小的内存
+        // _Ptr = _Container_proxy * __ptr64
+        // *_Ptr = _Container_proxy
+        // _Mycont = _Container_base12
+        // addressof(_Mycont) = _Container_base12 * __ptr64
+        //cout << typeid(_Ptr).name() << endl;
+        //cout << typeid(*_Ptr).name() << endl;
+        //cout << typeid(_Mycont).name() << endl;
+        //cout << typeid(addressof(_Mycont)).name() << endl;
+        // 类型 _Construct_in_place(_Container_proxy, _Container_base12 * __ptr64)
+        _Construct_in_place(*_Ptr, _STD addressof(_Mycont));        // 构造函数
         _Mycont._Myproxy = _Ptr;
     }
 
