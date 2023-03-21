@@ -796,8 +796,19 @@ public:
         // no overflow check on the following multiply; we assume _Allocate did that check
         _Deallocate<_New_alignof<_Ty>>(_Ptr, sizeof(_Ty) * _Count);
     }
-
+    // _NODISCARD 返回值不处理会警告 [[nodiscard]]
     _NODISCARD _CONSTEXPR20_DYNALLOC __declspec(allocator) _Ty* allocate(_CRT_GUARDOVERFLOW const size_t _Count) {
+        //size_t size = sizeof(_Ty);  // 16
+        //size_t _Bytes = _Get_size_of_n<size>(_Count);
+        //return static_cast<_Ty*>(   _Allocate<_New_alignof<_Ty>>(_Bytes) );
+        // >>>>> list<int>
+        // typeid(_Ty).name() = _Container_proxy
+        // _New_alignof<_Ty> = 16
+        // sizeof(_Ty) << " " << _Get_size_of_n<sizeof(_Ty)>(_Count) = 16 16
+        // _Allocate<>() 最终 执行::operator new(_Bytes);
+        cout << typeid(_Ty).name() << endl;
+        cout << _New_alignof<_Ty> << endl;
+        cout << sizeof(_Ty) << " " << _Get_size_of_n<sizeof(_Ty)>(_Count) << endl;
         return static_cast<_Ty*>(_Allocate<_New_alignof<_Ty>>(_Get_size_of_n<sizeof(_Ty)>(_Count)));
     }
 
@@ -995,14 +1006,14 @@ struct _Iterator_base0 {
 };
 
 struct _Container_base12;
-struct _Container_proxy { // store head of iterator chain and back pointer
+struct _Container_proxy { // store head of iterator chain and back pointer 存储迭代器链头和回指针
     _CONSTEXPR20_CONTAINER _Container_proxy() noexcept = default;
     _CONSTEXPR20_CONTAINER _Container_proxy(_Container_base12* _Mycont_) noexcept : _Mycont(_Mycont_) {
-        printf(" running _Container_proxy ���캯��\n");
+        printf(" running _Container_proxy 构造函数\n");
     }
 
     const _Container_base12* _Mycont       = nullptr;
-    mutable _Iterator_base12* _Myfirstiter = nullptr;  // mutalbe �ɱ��
+    mutable _Iterator_base12* _Myfirstiter = nullptr;  // mutalbe 可变的
 };
 
 struct _Container_base12 {
@@ -1279,16 +1290,16 @@ struct _Container_proxy_ptr12 : _Basic_container_proxy_ptr12 {
         _Ptr = _Unfancy(_Al_.allocate(1));
         _Construct_in_place(*_Ptr);
     }
-    // 1.�����ڴ� _Container_proxy
-    // 2. ���캯�� _MycontΪ����
+    // 1.申请内存 _Container_proxy
+    // 2. 构造函数 _Mycont为参数
     _CONSTEXPR20_CONTAINER _Container_proxy_ptr12(_Alloc& _Al_, _Container_base12& _Mycont) : _Al(_Al_) {
-        // create a new _Container_proxy pointing at _Mycont ����һ���µ�ָ��_Mycont��_Container_proxy
+        // create a new _Container_proxy pointing at _Mycont 创建一个新的指向_Mycont的_Container_proxy
         //>>>> list<int>
         // allocator<_Container_proxy>.allocate(1)
         // _Container_proxy* _Ptr;
         // >>>>> _Proxy(_Alproxy, _Mypair._Myval2)
         // allocator<_Container_proxy>
-        _Ptr = _Unfancy(_Al_.allocate(1));                          // ����1��_Container_proxy��С���ڴ�
+        _Ptr = _Unfancy(_Al_.allocate(1));                          // 申请1个_Container_proxy大小的内存
         // _Ptr = _Container_proxy * __ptr64
         // *_Ptr = _Container_proxy
         // _Mycont = _Container_base12
@@ -1297,8 +1308,8 @@ struct _Container_proxy_ptr12 : _Basic_container_proxy_ptr12 {
         //cout << typeid(*_Ptr).name() << endl;
         //cout << typeid(_Mycont).name() << endl;
         //cout << typeid(addressof(_Mycont)).name() << endl;
-        // ���� _Construct_in_place(_Container_proxy, _Container_base12 * __ptr64)
-        _Construct_in_place(*_Ptr, _STD addressof(_Mycont));        // ���캯��
+        // 类型 _Construct_in_place(_Container_proxy, _Container_base12 * __ptr64)
+        _Construct_in_place(*_Ptr, _STD addressof(_Mycont));        // 构造函数
         _Mycont._Myproxy = _Ptr;
     }
 
@@ -1342,9 +1353,15 @@ public:
 
     using _Mybase = _Ty1; // for visualization
 
+    // constexpr 修饰构造函数，类可以是常量类
+    // explicit 显式调用
+    // noexcept 不抛异常
     template <class... _Other2>
     constexpr explicit _Compressed_pair(_Zero_then_variadic_args_t, _Other2&&... _Val2) noexcept(
+        // conjunction_v 模板参数都为true_type，其值为true
         conjunction_v<is_nothrow_default_constructible<_Ty1>, is_nothrow_constructible<_Ty2, _Other2...>>)
+        // _Ty1() 派生类调用基类构造函数
+        // std::forward 完美转发
         : _Ty1(), _Myval2(_STD forward<_Other2>(_Val2)...) {}
 
     template <class _Other1, class... _Other2>
