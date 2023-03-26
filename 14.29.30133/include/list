@@ -35,7 +35,9 @@ public:
     using reference       = const value_type&;
 
     _List_unchecked_const_iterator() noexcept : _Ptr() {}
-
+    // _Pnode = _List_node<int,void *> *
+    // _Plist = const _List_val<std::_List_simple_types<int>> *
+    // _List_node 是 _List_val 的成员变量
     _List_unchecked_const_iterator(_Nodeptr _Pnode, const _Mylist* _Plist) noexcept : _Ptr(_Pnode) {
         this->_Adopt(_Plist);
     }
@@ -127,7 +129,8 @@ public:
         return _Tmp;
     }
 };
-
+// _Mylist = _List_val< _List_simple_types<int> >
+// _Iterator_base = _Iterator_base12;
 template <class _Mylist>
 class _List_const_iterator : public _List_unchecked_const_iterator<_Mylist, _Iterator_base> {
 public:
@@ -162,8 +165,9 @@ public:
         _STL_ASSERT(_Mycont, "cannot increment value-initialized list iterator");
         _STL_VERIFY(this->_Ptr != _Mycont->_Myhead, "cannot increment end list iterator");
 #endif // _ITERATOR_DEBUG_LEVEL == 2
-
+        // _Ptr _List_node<int,void *> *
         this->_Ptr = this->_Ptr->_Next;
+        //_Iterator_base12* iterator_base = this->_Mynextiter;
         return *this;
     }
 
@@ -221,7 +225,7 @@ public:
         this->_Ptr = _It._Ptr;
     }
 };
-
+// _Mylist = _List_val< _List_simple_types<int> >
 template <class _Mylist>
 class _List_iterator : public _List_const_iterator<_Mylist> {
 public:
@@ -777,10 +781,12 @@ private:
     using _Alnode_traits = allocator_traits<_Alnode>;
     using _Nodeptr       = typename _Alnode_traits::pointer;
 
-    using _Val_types = conditional_t<_Is_simple_alloc_v<_Alnode>, _List_simple_types<_Ty>,
-        _List_iter_types<_Ty, typename _Alty_traits::size_type, typename _Alty_traits::difference_type,
-            typename _Alty_traits::pointer, typename _Alty_traits::const_pointer, _Ty&, const _Ty&, _Nodeptr>>;
-
+    using _Val_types = conditional_t<_Is_simple_alloc_v<_Alnode>, 
+                                     _List_simple_types<_Ty>,
+                                     _List_iter_types<_Ty, typename _Alty_traits::size_type, typename _Alty_traits::difference_type,
+                                                      typename _Alty_traits::pointer, typename _Alty_traits::const_pointer, _Ty&, const _Ty&, _Nodeptr>
+                                    >;
+    // _Scary_val = _List_val< _List_simple_types<int> >
     using _Scary_val = _List_val<_Val_types>;
 
 public:
@@ -795,7 +801,7 @@ public:
     using const_pointer   = typename _Alty_traits::const_pointer;
     using reference       = value_type&;
     using const_reference = const value_type&;
-
+    // iterator = _List_iterator< _List_val< _List_simple_types<int> > >
     using iterator                  = _List_iterator<_Scary_val>;
     using const_iterator            = _List_const_iterator<_Scary_val>;
     using _Unchecked_iterator       = _List_unchecked_iterator<_Scary_val>;
@@ -805,8 +811,6 @@ public:
     using const_reverse_iterator = _STD reverse_iterator<const_iterator>;
 
     list() : _Mypair(_Zero_then_variadic_args_t{}) {
-        //cout << typeid(_Node).name() << endl;
-        //cout << typeid(_Alnode).name() << endl;
         _Alloc_sentinel_and_proxy();
     }
 
@@ -1009,13 +1013,18 @@ public:
     template <class... _Valty>
     iterator emplace(const const_iterator _Where, _Valty&&... _Val) { // insert element at _Where
 #if _ITERATOR_DEBUG_LEVEL == 2
+        // _Container_base12*
+        //_Myval2	{_Myhead=0x00000258bcf049d0}  _List_val< std::_List_simple_types<int> >
+        //const _Container_base12* cont1 = _Where._Getcont();
+        //auto val = _STD addressof(_Mypair._Myval2);
         _STL_VERIFY(_Where._Getcont() == _STD addressof(_Mypair._Myval2), "list emplace iterator outside range");
 #endif // _ITERATOR_DEBUG_LEVEL == 2
+        // _Where._Ptr = std::_List_node<int,void *> * const
 
         return _Make_iter(_Emplace(_Where._Ptr, _STD forward<_Valty>(_Val)...));
     }
-
-    //_Where = _List_node<int,void *> *
+    // 在where note后面插入一个val
+    //_Where = _List_node<int,void *> * const
     template <class... _Valty>
     _Nodeptr _Emplace(const _Nodeptr _Where, _Valty&&... _Val) { // insert element at _Where
         size_type& _Mysize = _Mypair._Myval2._Mysize;
@@ -1028,6 +1037,7 @@ public:
         return _Op._Transfer_before(_Where);
     }
 
+    // std::list<int> mylist = { 1, 2 };
     list(initializer_list<_Ty> _Ilist) : _Mypair(_Zero_then_variadic_args_t{}) {
         _Construct_range_unchecked(_Ilist.begin(), _Ilist.end());
     }
@@ -1095,7 +1105,7 @@ public:
 
         return *this;
     }
-
+    // _Next = _List_node<int,void *> *
     _NODISCARD iterator begin() noexcept {
         return iterator(_Mypair._Myval2._Myhead->_Next, _STD addressof(_Mypair._Myval2));
     }

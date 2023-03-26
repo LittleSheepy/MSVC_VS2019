@@ -156,7 +156,7 @@ _CONSTEXPR20_DYNALLOC void _Construct_in_place(_Ty& _Obj, _Types&&... _Args) noe
         // _Ty = _List_node<int,void * __ptr64> * __ptr64
         //
         //_STD cout << typeid(_Ty).name() << _STD endl;
-        // printf("<_Construct_in_place> %s\n", typeid(_Ty).name());
+        //printf("<_Construct_in_place> %s\n", typeid(_Ty).name());
         ::new (_Voidify_iter(_STD addressof(_Obj))) _Ty(_STD forward<_Types>(_Args)...);
         //上面的代码就是就是在某一块内存上面，调用某一个类的构造函数， 估计很多人都是第一次见这种语法。
     }
