@@ -1355,6 +1355,13 @@
 #define __cpp_lib_experimental_erase_if   201411L
 #define __cpp_lib_experimental_filesystem 201406L
 
+/*
+constexpr 用于指示函数或变量可以在编译时计算。
+这意味着函数或变量的值在编译时已知，并且可以在其他编译时表达式中使用。
+这可以通过减少运行时计算的需要来帮助优化代码。
+inline 用于指示函数应该在调用它的地方展开，而不是作为单独的函数调用。
+这可以通过减少函数调用的开销来帮助优化代码。
+*/
 // Functions that became constexpr in C++20 via P0784R7
 #ifdef __cpp_lib_constexpr_dynamic_alloc
 #define _CONSTEXPR20_DYNALLOC constexpr

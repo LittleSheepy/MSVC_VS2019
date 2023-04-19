@@ -6,7 +6,7 @@
 #pragma once
 #ifndef _XMEMORY_
 #define _XMEMORY_
-#include <iostream>
+//#include <iostream>
 //using namespace std;
 #include <yvals_core.h>
 #if _STL_COMPILER_PREPROCESSOR
@@ -1010,7 +1010,7 @@ struct _Container_base12;
 struct _Container_proxy { // store head of iterator chain and back pointer 存储迭代器链头和回指针
     _CONSTEXPR20_CONTAINER _Container_proxy() noexcept = default;
     _CONSTEXPR20_CONTAINER _Container_proxy(_Container_base12* _Mycont_) noexcept : _Mycont(_Mycont_) {
-        // printf(" running _Container_proxy 构造函数\n");
+        printf("构造函数running _Container_proxye\n");
     }
 
     const _Container_base12* _Mycont       = nullptr;

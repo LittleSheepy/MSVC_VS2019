@@ -16,7 +16,7 @@
 #if _HAS_CXX17
 #include <xpolymorphic_allocator.h>
 #endif // _HAS_CXX17
-
+#include <typeinfo>
 #pragma pack(push, _CRT_PACKING)
 #pragma warning(push, _STL_WARNING_LEVEL)
 #pragma warning(disable : _STL_DISABLED_WARNINGS)
@@ -2339,7 +2339,7 @@ struct _String_constructor_rvalue_allocator_tag {
 [[noreturn]] inline void _Xlen_string() {
     _Xlength_error("string too long");
 }
-
+// _Alloc : allocator<char>
 template <class _Elem, class _Traits = char_traits<_Elem>, class _Alloc = allocator<_Elem>>
 class basic_string { // null-terminated transparent array of elements
 private:
@@ -2428,9 +2428,28 @@ public:
         _Construct_lv_contents(_Right);
         _Proxy._Release();
     }
+    /*
+     noexcept 不会抛出任何异常
+     is_nothrow_default_constructible_v<_Alty> 表达式检查 _Alty 模板参数是否是 nothrow 默认可构造的。
 
+     _Mypair(_Zero_then_variadic_args_t{}):
+     这行代码使用 _Zero_then_variadic_args_t 对象初始化 _Mypair 成员。
+     该对象用于将 _Mypair 的 _Myval1 成员初始化为零。
+     _Mypair 的 _Myval2 成员使用可变参数列表进行初始化，在本例中为空。
+
+     _Mypair._Myval2._Alloc_proxy(_GET_PROXY_ALLOCATOR(_Alty, _Getal()));:
+     这行代码使用 _GET_PROXY_ALLOCATOR 宏创建一个与 _Alty 模板参数兼容的分配器对象，
+     然后将分配器传递给 _Myval2 的 _Alloc_proxy 函数，从而初始化 _Mypair 的 _Myval2 成员。
+    */
     _CONSTEXPR20_CONTAINER basic_string() noexcept(is_nothrow_default_constructible_v<_Alty>)
         : _Mypair(_Zero_then_variadic_args_t{}) {
+        // static_cast<_Rebind_alloc_t<allocator<char>, _Container_proxy>>(_Getal())
+        // _Rebind_alloc_t<allocator<char>, _Container_proxy> : allocator<_Container_proxy>
+        // static_cast是C++中的一个类型转换运算符，用于将一个表达式转换为指定的类型
+        // static_cast<int>(double b) 将b由double类型转为int类型
+        // _Alty : allocator<char>     _Getal():_Alty类型的对象
+        // _GET_PROXY_ALLOCATOR(_Alty, _Getal()) 就是把_Getal()返回的对象强制转为类型 allocator<_Container_proxy>
+        auto tt = typeid(_Alloc).name();
         _Mypair._Myval2._Alloc_proxy(_GET_PROXY_ALLOCATOR(_Alty, _Getal()));
         _Tidy_init();
     }
