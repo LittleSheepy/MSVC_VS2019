@@ -77,7 +77,7 @@ struct _Default_allocate_traits {
         _CONSTEXPR20_DYNALLOC
 #endif // __clang__
         void* _Allocate(const size_t _Bytes) {
-        return ::operator new(_Bytes);
+        return ::operator new(_Bytes);      // 全局的operator new函数用于为未知类型的对象分配内存。
     }
 
 #ifdef __cpp_aligned_new
@@ -1010,7 +1010,7 @@ struct _Container_base12;
 struct _Container_proxy { // store head of iterator chain and back pointer 存储迭代器链头和回指针
     _CONSTEXPR20_CONTAINER _Container_proxy() noexcept = default;
     _CONSTEXPR20_CONTAINER _Container_proxy(_Container_base12* _Mycont_) noexcept : _Mycont(_Mycont_) {
-        printf("构造函数running _Container_proxye\n");
+        printf("构造函数running _Container_proxy\n");
     }
 
     const _Container_base12* _Mycont       = nullptr;
@@ -1026,13 +1026,18 @@ public:
 
     _CONSTEXPR20_CONTAINER void _Orphan_all() noexcept;
     _CONSTEXPR20_CONTAINER void _Swap_proxy_and_iterators(_Container_base12&) noexcept;
-
+    /*
+    string
+    _Al : allocator<_Container_proxy>
+    */ 
     template <class _Alloc>
     _CONSTEXPR20_CONTAINER void _Alloc_proxy(_Alloc&& _Al) {
+        // 分配一个 _Container_proxy大小的内存，_Container_proxy大小为16   Unfancy 函数用于将分配器返回的指针转换为原始指针。
         _Container_proxy* const _New_proxy = _Unfancy(_Al.allocate(1));
+        // 执行 _Container_proxy 的构造函数 this(_Container_base12) 作为构造函数参数
         _Construct_in_place(*_New_proxy, this);
         _Myproxy            = _New_proxy;
-        _New_proxy->_Mycont = this;
+        //_New_proxy->_Mycont = this;
     }
 
     template <class _Alloc>
@@ -1280,7 +1285,10 @@ protected:
     _Basic_container_proxy_ptr12(const _Basic_container_proxy_ptr12&) = delete;
     _Basic_container_proxy_ptr12(_Basic_container_proxy_ptr12&&)      = delete;
 };
-
+/*
+string:
+_Alloc: allocator<char>
+*/ 
 template <class _Alloc>
 struct _Container_proxy_ptr12 : _Basic_container_proxy_ptr12 {
     // smart pointer components for a _Container_proxy * for an allocator family
@@ -1293,6 +1301,10 @@ struct _Container_proxy_ptr12 : _Basic_container_proxy_ptr12 {
     }
     // 1.申请内存 _Container_proxy
     // 2. 构造函数 _Mycont为参数
+    /*
+    string:
+    _Alloc:allocator<_Container_proxy>
+    */
     _CONSTEXPR20_CONTAINER _Container_proxy_ptr12(_Alloc& _Al_, _Container_base12& _Mycont) : _Al(_Al_) {
         // create a new _Container_proxy pointing at _Mycont 创建一个新的指向_Mycont的_Container_proxy
         //>>>> list<int>

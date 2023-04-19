@@ -9,6 +9,10 @@ int main(){
     return 0;
 }
 
+/*
+xmemory 1040 _Alloc_proxy 函数 注释了一行 看看有啥后果
+
+*/
 
 /*
 xmemory 

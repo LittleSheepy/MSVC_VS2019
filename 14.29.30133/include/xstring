@@ -2345,13 +2345,16 @@ class basic_string { // null-terminated transparent array of elements
 private:
     friend _Tidy_deallocate_guard<basic_string>;
     friend basic_stringbuf<_Elem, _Traits, _Alloc>;
-
+    // _Alty : allocator<char>
     using _Alty        = _Rebind_alloc_t<_Alloc, _Elem>;
     using _Alty_traits = allocator_traits<_Alty>;
-
-    using _Scary_val = _String_val<conditional_t<_Is_simple_alloc_v<_Alty>, _Simple_types<_Elem>,
-        _String_iter_types<_Elem, typename _Alty_traits::size_type, typename _Alty_traits::difference_type,
-            typename _Alty_traits::pointer, typename _Alty_traits::const_pointer, _Elem&, const _Elem&>>>;
+    // _String_val<_Simple_types<char>>
+    using _Scary_val = _String_val<
+        conditional_t<_Is_simple_alloc_v<_Alty>, 
+                      _Simple_types<_Elem>,
+                      _String_iter_types<_Elem, typename _Alty_traits::size_type, typename _Alty_traits::difference_type,
+                                         typename _Alty_traits::pointer, typename _Alty_traits::const_pointer, _Elem&, const _Elem&>
+        >>;
 
     static_assert(!_ENFORCE_MATCHING_ALLOCATORS || is_same_v<_Elem, typename _Alloc::value_type>,
         _MISMATCHED_ALLOCATOR_MESSAGE("basic_string<T, Traits, Allocator>", "T"));
@@ -2429,28 +2432,30 @@ public:
         _Proxy._Release();
     }
     /*
-     noexcept ²»»áÅ×³öÈÎºÎÒì³£
-     is_nothrow_default_constructible_v<_Alty> ±í´ïÊ½¼ì²é _Alty Ä£°å²ÎÊıÊÇ·ñÊÇ nothrow Ä¬ÈÏ¿É¹¹ÔìµÄ¡£
+     noexcept ä¸ä¼šæŠ›å‡ºä»»ä½•å¼‚å¸¸
+     is_nothrow_default_constructible_v<_Alty> è¡¨è¾¾å¼æ£€æŸ¥ _Alty æ¨¡æ¿å‚æ•°æ˜¯å¦æ˜¯ nothrow é»˜è®¤å¯æ„é€ çš„ã€‚
 
      _Mypair(_Zero_then_variadic_args_t{}):
-     ÕâĞĞ´úÂëÊ¹ÓÃ _Zero_then_variadic_args_t ¶ÔÏó³õÊ¼»¯ _Mypair ³ÉÔ±¡£
-     ¸Ã¶ÔÏóÓÃÓÚ½« _Mypair µÄ _Myval1 ³ÉÔ±³õÊ¼»¯ÎªÁã¡£
-     _Mypair µÄ _Myval2 ³ÉÔ±Ê¹ÓÃ¿É±ä²ÎÊıÁĞ±í½øĞĞ³õÊ¼»¯£¬ÔÚ±¾ÀıÖĞÎª¿Õ¡£
+     è¿™è¡Œä»£ç ä½¿ç”¨ _Zero_then_variadic_args_t å¯¹è±¡åˆå§‹åŒ– _Mypair æˆå‘˜ã€‚
+     è¯¥å¯¹è±¡ç”¨äºå°† _Mypair çš„ _Myval1 æˆå‘˜åˆå§‹åŒ–ä¸ºé›¶ã€‚
+     _Mypair çš„ _Myval2 æˆå‘˜ä½¿ç”¨å¯å˜å‚æ•°åˆ—è¡¨è¿›è¡Œåˆå§‹åŒ–ï¼Œåœ¨æœ¬ä¾‹ä¸­ä¸ºç©ºã€‚
 
      _Mypair._Myval2._Alloc_proxy(_GET_PROXY_ALLOCATOR(_Alty, _Getal()));:
-     ÕâĞĞ´úÂëÊ¹ÓÃ _GET_PROXY_ALLOCATOR ºê´´½¨Ò»¸öÓë _Alty Ä£°å²ÎÊı¼æÈİµÄ·ÖÅäÆ÷¶ÔÏó£¬
-     È»ºó½«·ÖÅäÆ÷´«µİ¸ø _Myval2 µÄ _Alloc_proxy º¯Êı£¬´Ó¶ø³õÊ¼»¯ _Mypair µÄ _Myval2 ³ÉÔ±¡£
+     è¿™è¡Œä»£ç ä½¿ç”¨ _GET_PROXY_ALLOCATOR å®åˆ›å»ºä¸€ä¸ªä¸ _Alty æ¨¡æ¿å‚æ•°å…¼å®¹çš„åˆ†é…å™¨å¯¹è±¡ï¼Œ
+     ç„¶åå°†åˆ†é…å™¨ä¼ é€’ç»™ _Myval2 çš„ _Alloc_proxy å‡½æ•°ï¼Œä»è€Œåˆå§‹åŒ– _Mypair çš„ _Myval2 æˆå‘˜ã€‚
     */
     _CONSTEXPR20_CONTAINER basic_string() noexcept(is_nothrow_default_constructible_v<_Alty>)
         : _Mypair(_Zero_then_variadic_args_t{}) {
         // static_cast<_Rebind_alloc_t<allocator<char>, _Container_proxy>>(_Getal())
         // _Rebind_alloc_t<allocator<char>, _Container_proxy> : allocator<_Container_proxy>
-        // static_castÊÇC++ÖĞµÄÒ»¸öÀàĞÍ×ª»»ÔËËã·û£¬ÓÃÓÚ½«Ò»¸ö±í´ïÊ½×ª»»ÎªÖ¸¶¨µÄÀàĞÍ
-        // static_cast<int>(double b) ½«bÓÉdoubleÀàĞÍ×ªÎªintÀàĞÍ
-        // _Alty : allocator<char>     _Getal():_AltyÀàĞÍµÄ¶ÔÏó
-        // _GET_PROXY_ALLOCATOR(_Alty, _Getal()) ¾ÍÊÇ°Ñ_Getal()·µ»ØµÄ¶ÔÏóÇ¿ÖÆ×ªÎªÀàĞÍ allocator<_Container_proxy>
+        // static_castæ˜¯C++ä¸­çš„ä¸€ä¸ªç±»å‹è½¬æ¢è¿ç®—ç¬¦ï¼Œç”¨äºå°†ä¸€ä¸ªè¡¨è¾¾å¼è½¬æ¢ä¸ºæŒ‡å®šçš„ç±»å‹
+        // static_cast<int>(double b) å°†bç”±doubleç±»å‹è½¬ä¸ºintç±»å‹
+        // _Alty : allocator<char>     _Getal():_Altyç±»å‹çš„å¯¹è±¡
+        // _GET_PROXY_ALLOCATOR(_Alty, _Getal()) å°±æ˜¯æŠŠ_Getal()è¿”å›çš„å¯¹è±¡å¼ºåˆ¶è½¬ä¸ºç±»å‹ allocator<_Container_proxy>
         auto tt = typeid(_Alloc).name();
+        // åˆ›å»ºå¯¹è±¡ _Container_proxy
         _Mypair._Myval2._Alloc_proxy(_GET_PROXY_ALLOCATOR(_Alty, _Getal()));
+        // åˆå§‹åŒ– basic_string çš„æ•°æ®æˆå‘˜
         _Tidy_init();
     }
 
@@ -2498,9 +2503,15 @@ public:
         assign(_Ptr, _Count);
         _Proxy._Release();
     }
-
+    /*
+    && å³å€¼å¼•ç”¨ã€‚ä½¿ç”¨äº†C++11ä¸­çš„å³å€¼å¼•ç”¨ï¼ˆ&&ï¼‰æ¥å®ç°ç§»åŠ¨è¯­ä¹‰ã€‚
+    å³å€¼å¼•ç”¨æ˜¯ä¸€ç§æ–°çš„å¼•ç”¨ç±»å‹ï¼Œå®ƒå¯ä»¥ç»‘å®šåˆ°ä¸€ä¸ªå³å€¼ï¼ˆå³å°†è¦è¢«é”€æ¯çš„ä¸´æ—¶å¯¹è±¡æˆ–è€…ä¸€ä¸ªæ²¡æœ‰å…¶ä»–å¼•ç”¨çš„å¯¹è±¡ï¼‰ã€‚
+    åœ¨è¿™é‡Œï¼Œä½¿ç”¨å³å€¼å¼•ç”¨å¯ä»¥é¿å…ä¸å¿…è¦çš„æ‹·è´æ“ä½œï¼Œæé«˜ä»£ç çš„æ•ˆç‡ã€‚
+    */
     _CONSTEXPR20_CONTAINER basic_string(_In_z_ const _Elem* const _Ptr) : _Mypair(_Zero_then_variadic_args_t{}) {
         auto&& _Alproxy = _GET_PROXY_ALLOCATOR(_Alty, _Getal());
+        // _Alty : allocator<char>
+        // _Alproxy: allocator<_Container_proxy>   _Mypair._Myval2: _String_val<_Simple_types<char>>
         _Container_proxy_ptr<_Alty> _Proxy(_Alproxy, _Mypair._Myval2);
         _Tidy_init();
         assign(_Ptr);
@@ -4575,20 +4586,22 @@ private:
     _CONSTEXPR20_CONTAINER void _Eos(const size_type _Newsize) { // set new length and null terminator
         _Traits::assign(_Mypair._Myval2._Myptr()[_Mypair._Myval2._Mysize = _Newsize], _Elem());
     }
-
+    // åˆå§‹åŒ– basic_string çš„æ•°æ®æˆå‘˜
     _CONSTEXPR20_CONTAINER void _Tidy_init() noexcept { // initialize basic_string data members
         auto& _My_data   = _Mypair._Myval2;
         _My_data._Mysize = 0;
 
 #ifdef __cpp_lib_constexpr_string
+        // is_constant_evaluated() æ˜¯ä¸€ä¸ª C++20 ä¸­çš„æ–°å‡½æ•°ï¼Œç”¨äºæ£€æŸ¥å½“å‰æ˜¯å¦å¤„äºå¸¸é‡è¡¨è¾¾å¼ä¸Šä¸‹æ–‡ä¸­ã€‚
+        // 
         if (_STD is_constant_evaluated()) {
-            _My_data._Myres        = _BUF_SIZE; // SSO disabled in constexpr context
-            auto& _Al              = _Getal();
-            const pointer _New_ptr = _Al.allocate(_BUF_SIZE + 1); // throws
+            _My_data._Myres        = _BUF_SIZE; // SSO disabled in constexpr context è¿™æ˜¯åœ¨ç¼–è¯‘æ—¶åˆ†é…å†…å­˜çš„å¤§å°
+            auto& _Al              = _Getal();  // è·å–åˆ†é…å™¨
+            const pointer _New_ptr = _Al.allocate(_BUF_SIZE + 1); // throws åˆ†é…å†…å­˜ åˆ†é…å¤±è´¥å°±æŠ›å¼‚å¸¸
             _My_data._Bx._Ptr      = _New_ptr;
 
             _Elem* const _Raw_new = _Unfancy(_New_ptr);
-            _Traits::assign(_Raw_new, _BUF_SIZE + 1, _Elem());
+            _Traits::assign(_Raw_new, _BUF_SIZE + 1, _Elem());  // å°† _Raw_new çš„å‰ _BUF_SIZE + 1 ä¸ªå­—ç¬¦è®¾ç½®ä¸º _Elem()ï¼Œå³ç©ºå­—ç¬¦ã€‚
         } else
 #endif // __cpp_lib_constexpr_string
         {
@@ -4639,7 +4652,7 @@ private:
     _CONSTEXPR20_CONTAINER const _Alty& _Getal() const noexcept {
         return _Mypair._Get_first();
     }
-
+    // _Ty1:_Alty : allocator<char> çˆ¶ç±»    _Scary_val: _String_val<_Simple_types<char>>  _Myval2 çš„ç±»å‹
     _Compressed_pair<_Alty, _Scary_val> _Mypair;
 };
 
