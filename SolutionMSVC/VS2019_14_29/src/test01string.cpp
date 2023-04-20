@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <string>
 using namespace std;
 
@@ -41,6 +42,24 @@ void my_replace() {
     mystring.replace(1, 1, mystring1, 1, 1);
     std::string_view view = "c";
     mystring.replace(2, 1, view);
+    view = "cd";
+    mystring.replace(3, 1, view, 1, 1);
+    cout << mystring << endl;
+
+    mystring = "123456789abcde";
+    mystring1 = "a";
+    mystring.replace(mystring.begin(), mystring.begin() + 1, mystring1);
+    view = "b";
+    mystring.replace(mystring.begin()+1, mystring.begin() + 2, view);
+
+    mystring = "123456789abcde";
+    std::string str3 = "everyone";
+    mystring.replace(mystring.begin(), mystring.end(), str3.begin(), str3.end());
+    cout << mystring << endl;
+
+    std::vector<int> vec{ 'a', 'b', 'c'};
+    mystring = "123456789abcde";
+    mystring.replace(mystring.begin(), mystring.end(), vec.begin(), vec.end());
     cout << mystring << endl;
 }
 

@@ -3510,6 +3510,7 @@ public:
     }
 
 #if _HAS_CXX17
+    // 已读 mystring.replace(2, 1, view);
     template <class _StringViewIsh, _Is_string_view_ish<_StringViewIsh> = 0>
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const size_type _Off, const size_type _Nx, const _StringViewIsh& _Right) {
@@ -3517,7 +3518,7 @@ public:
         basic_string_view<_Elem, _Traits> _As_view = _Right;
         return replace(_Off, _Nx, _As_view.data(), _Convert_size<size_type>(_As_view.size()));
     }
-
+    // 已读
     template <class _StringViewIsh, _Is_string_view_ish<_StringViewIsh> = 0>
     _CONSTEXPR20_CONTAINER basic_string& replace(const size_type _Off, const size_type _Nx,
         const _StringViewIsh& _Right, const size_type _Roff, const size_type _Count = npos) {
@@ -3635,7 +3636,7 @@ public:
             },
             _Off, _Nx, _Count, _Ch);
     }
-
+    // 已读
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const const_iterator _First, const const_iterator _Last, const basic_string& _Right) {
         // replace [_First, _Last) with _Right
@@ -3648,6 +3649,7 @@ public:
     }
 
 #if _HAS_CXX17
+    // 已读
     template <class _StringViewIsh, _Is_string_view_ish<_StringViewIsh> = 0>
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const const_iterator _First, const const_iterator _Last, const _StringViewIsh& _Right) {
@@ -3693,7 +3695,7 @@ public:
         return replace(static_cast<size_type>(_Unfancy(_First._Ptr) - _Mypair._Myval2._Myptr()),
             static_cast<size_type>(_Last._Ptr - _First._Ptr), _Count, _Ch);
     }
-
+    // 已读
     template <class _Iter, enable_if_t<_Is_iterator_v<_Iter>, int> = 0>
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const const_iterator _First, const const_iterator _Last, const _Iter _First2, const _Iter _Last2) {
