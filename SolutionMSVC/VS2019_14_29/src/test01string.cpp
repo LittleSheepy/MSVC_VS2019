@@ -20,38 +20,28 @@ void my_creat() {
 
 // 替换字符
 void my_replace() {
-    string mystring = "1old1";
-    mystring.replace(mystring.begin()+1, mystring.begin() + 4, { 'n', 'e', 'w' });
+    string mystring = "123456789abcde";
+    mystring.replace(0, 1, "a");        // 用另一个子字符串替换字符范围
+    mystring.replace(1, 1, "b", 1);
+    mystring.replace(2, 1, 1, 'c');     // 将一系列字符替换为一个字符
+    mystring.replace(3, 2, 2, 'd');     // 将一系列字符替换为N个字符
+    mystring.replace(mystring.find("6"), 1, "e");
     cout << mystring << endl;
-    mystring.replace(1, 3, "new");
-    // Replace a substring with another substring
-    std::basic_string<char> str1 = "old string";
-    str1.replace(str1.find("old"), 3, "new");
-    // Result: "new string"
-
-    // Replace a substring with a character
-    std::basic_string<char> str2 = "old string";
-    str2.replace(str2.find("old"), 3, 1, 'n');
-    // Result: "n string"
-
-    // Replace a range of characters with another substring
-    std::basic_string<char> str3 = "old string";
-    str3.replace(0, 3, "new");
-    // Result: "new string"
-
-    // Replace a range of characters with a character
-    std::basic_string<char> str4 = "old string";
-    str4.replace(0, 3, 1, 'n');
-    // Result: "n string"
-
-    // Replace a range of characters with the contents of another string
-    std::basic_string<char> str5 = "old string";
-    std::basic_string<char> new_str = "new";
-    str5.replace(0, 3, new_str);
-    // Result: "new string"
+    mystring = "123456789abcde";
+    mystring.replace(mystring.begin(), mystring.begin() + 1, "a");
+    mystring.replace(mystring.begin()+1, mystring.begin() + 2, "b", 1);
+    mystring.replace(mystring.begin() + 2, mystring.begin() + 3, 1, 'c');
+    mystring.replace(mystring.begin() + 3, mystring.begin() + 5, 2, 'd');
+    mystring.replace(mystring.begin() + 5, mystring.begin() + 8, { 'e', 'f', 'g'});
+    cout << mystring << endl;
+    mystring = "123456789abcde";
+    string mystring1 = "a";
+    mystring.replace(0, 1, mystring1);
+    mystring1 = "ab";
+    mystring.replace(1, 1, mystring1, 1, 1);
+    std::string_view view = "everyone";
+    cout << mystring << endl;
 }
-
-
 
 
 void test01string() {
