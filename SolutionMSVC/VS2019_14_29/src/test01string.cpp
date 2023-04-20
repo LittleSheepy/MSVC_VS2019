@@ -39,7 +39,8 @@ void my_replace() {
     mystring.replace(0, 1, mystring1);
     mystring1 = "ab";
     mystring.replace(1, 1, mystring1, 1, 1);
-    std::string_view view = "everyone";
+    std::string_view view = "c";
+    mystring.replace(2, 1, view);
     cout << mystring << endl;
 }
 
