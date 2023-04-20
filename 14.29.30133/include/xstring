@@ -2982,7 +2982,7 @@ public:
         insert(_Off, _Ilist.begin(), _Convert_size<size_type>(_Ilist.size()));
         return begin() + static_cast<difference_type>(_Off);
     }
-
+    // 已读
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const const_iterator _First, const const_iterator _Last, const initializer_list<_Elem> _Ilist) {
         // replace with initializer_list
@@ -3494,13 +3494,13 @@ public:
     _CONSTEXPR20_CONTAINER void clear() noexcept { // erase all
         _Eos(0);
     }
-
+    // 已读
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const size_type _Off, const size_type _Nx, const basic_string& _Right) {
         // replace [_Off, _Off + _Nx) with _Right
         return replace(_Off, _Nx, _Right._Mypair._Myval2._Myptr(), _Right._Mypair._Myval2._Mysize);
     }
-
+    // 已读
     _CONSTEXPR20_CONTAINER basic_string& replace(const size_type _Off, size_type _Nx, const basic_string& _Right,
         const size_type _Roff, size_type _Count = npos) {
         // replace [_Off, _Off + _Nx) with _Right [_Roff, _Roff + _Count)
@@ -3526,7 +3526,7 @@ public:
         return replace(_Off, _Nx, _As_view.substr(_Roff, _Count));
     }
 #endif // _HAS_CXX17
-
+    // 已读 mystring.replace(1, 1, "b", 1);
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const size_type _Off, size_type _Nx, _In_reads_(_Count) const _Elem* const _Ptr, const size_type _Count) {
         // replace [_Off, _Off + _Nx) with [_Ptr, _Ptr + _Count)
@@ -3562,8 +3562,10 @@ public:
                 _Elem* const _Insert_at = _Old_ptr + _Off;
                 _Elem* const _Suffix_at = _Insert_at + _Nx;
 
-                size_type _Ptr_shifted_after; // see rationale in insert
-                if (_Ptr + _Count <= _Insert_at || _Ptr > _Old_ptr + _Old_size) {
+                size_type _Ptr_shifted_after; // see rationale in insert 参见insert中的基本原理
+                if (_Ptr + _Count <= _Insert_at) {
+                    _Ptr_shifted_after = _Count;
+                }else if (_Ptr > _Old_ptr + _Old_size) {
                     _Ptr_shifted_after = _Count;
                 } else if (_Suffix_at <= _Ptr) {
                     _Ptr_shifted_after = 0;
@@ -3594,13 +3596,13 @@ public:
             },
             _Off, _Nx, _Ptr, _Count);
     }
-
+    // 已读 mystring.replace(0, 1, "a");
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const size_type _Off, const size_type _Nx, _In_z_ const _Elem* const _Ptr) {
         // replace [_Off, _Off + _Nx) with [_Ptr, <null>)
         return replace(_Off, _Nx, _Ptr, _Convert_size<size_type>(_Traits::length(_Ptr)));
     }
-
+    // 已读 已调用
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const size_type _Off, size_type _Nx, const size_type _Count, const _Elem _Ch) {
         // replace [_Off, _Off + _Nx) with _Count * _Ch
@@ -3658,7 +3660,7 @@ public:
             static_cast<size_type>(_Last._Ptr - _First._Ptr), _Right);
     }
 #endif // _HAS_CXX17
-
+    // 已读
     _CONSTEXPR20_CONTAINER basic_string& replace(const const_iterator _First, const const_iterator _Last,
         _In_reads_(_Count) const _Elem* const _Ptr, const size_type _Count) {
         // replace [_First, _Last) with [_Ptr, _Ptr + _Count)
@@ -3669,7 +3671,7 @@ public:
         return replace(static_cast<size_type>(_Unfancy(_First._Ptr) - _Mypair._Myval2._Myptr()),
             static_cast<size_type>(_Last._Ptr - _First._Ptr), _Ptr, _Count);
     }
-
+    // 已读
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const const_iterator _First, const const_iterator _Last, _In_z_ const _Elem* const _Ptr) {
         // replace [_First, _Last) with [_Ptr, <null>)
@@ -3680,7 +3682,7 @@ public:
         return replace(static_cast<size_type>(_Unfancy(_First._Ptr) - _Mypair._Myval2._Myptr()),
             static_cast<size_type>(_Last._Ptr - _First._Ptr), _Ptr);
     }
-
+    // 已读
     _CONSTEXPR20_CONTAINER basic_string& replace(
         const const_iterator _First, const const_iterator _Last, const size_type _Count, const _Elem _Ch) {
         // replace [_First, _Last) with _Count * _Ch
