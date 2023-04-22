@@ -14,10 +14,26 @@ void my_creat() {
     mystring = "aaa";                                                   // operator=(_In_z_ const _Elem* const _Ptr)
 }
 
-//// 替换字符
-//void my_replace() {
-//    string mystring;
-//}
+// 字符串查找
+void my_find() {
+    string mystring = "0123456789876543210";
+    string::size_type pos = mystring.find("2");
+    printf("find %zu\n", pos);
+    string::size_type rpos = mystring.rfind("2");
+    printf("rfind %zu\n", rpos);
+
+    std::string::size_type find_first_of_pos = mystring.find_first_of("92");    // 用于在字符串中查找第一个与指定字符序列中的任何一个字符匹配的字符。
+    printf("find_first_of %zu\n", find_first_of_pos);
+
+    std::string::size_type find_last_of_pos = mystring.find_last_of("92");    // 用于在字符串中查找最后一个与指定字符序列中的任何一个字符匹配的字符。
+    printf("find_last_of %zu\n", find_last_of_pos);
+
+    std::string::size_type find_last_of_pos = mystring.find_first_not_of("92");    // 用于在字符串中查找最后一个与指定字符序列中的任何一个字符匹配的字符。
+    printf("find_last_of %zu\n", find_last_of_pos);
+
+
+
+}
 
 // 替换字符
 void my_replace() {
@@ -30,10 +46,10 @@ void my_replace() {
     cout << mystring << endl;
     mystring = "123456789abcde";
     mystring.replace(mystring.begin(), mystring.begin() + 1, "a");
-    mystring.replace(mystring.begin()+1, mystring.begin() + 2, "b", 1);
+    mystring.replace(mystring.begin() + 1, mystring.begin() + 2, "b", 1);
     mystring.replace(mystring.begin() + 2, mystring.begin() + 3, 1, 'c');
     mystring.replace(mystring.begin() + 3, mystring.begin() + 5, 2, 'd');
-    mystring.replace(mystring.begin() + 5, mystring.begin() + 8, { 'e', 'f', 'g'});
+    mystring.replace(mystring.begin() + 5, mystring.begin() + 8, { 'e', 'f', 'g' });
     cout << mystring << endl;
     mystring = "123456789abcde";
     string mystring1 = "a";
@@ -50,14 +66,14 @@ void my_replace() {
     mystring1 = "a";
     mystring.replace(mystring.begin(), mystring.begin() + 1, mystring1);
     view = "b";
-    mystring.replace(mystring.begin()+1, mystring.begin() + 2, view);
+    mystring.replace(mystring.begin() + 1, mystring.begin() + 2, view);
 
     mystring = "123456789abcde";
     std::string str3 = "everyone";
     mystring.replace(mystring.begin(), mystring.end(), str3.begin(), str3.end());
     cout << mystring << endl;
 
-    std::vector<int> vec{ 'a', 'b', 'c'};
+    std::vector<int> vec{ 'a', 'b', 'c' };
     mystring = "123456789abcde";
     mystring.replace(mystring.begin(), mystring.end(), vec.begin(), vec.end());
     cout << mystring << endl;
@@ -65,7 +81,7 @@ void my_replace() {
 
 
 void test01string() {
-    my_replace();
+    my_find();
 }
 
 
