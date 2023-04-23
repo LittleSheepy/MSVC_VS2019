@@ -1,19 +1,79 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 using namespace std;
 
 // 字符串的创建和赋值
 void my_creat() {
+    int myInt = 42;
+    double myDouble = 3.14;
+    float myFloat = 2.718f;
+    long myLong = 1234567890L;
+    string intString = to_string(myInt);
+    string doubleString = to_string(myDouble);
+    string floatString = to_string(myFloat);
+    string longString = to_string(myLong);
     string string_cStyle = "hello";                                     // C风格
     string string_cStyle2 = string("Hello, Hello, world!");             // C风格
-    std::string string_copy = string_cStyle;                            // 拷贝构造
-    std::string string_copy2 = string(string_cStyle);                   // 拷贝构造
+    string string_copy = string_cStyle;                            // 拷贝构造
+    string string_copy2 = string(string_cStyle);                   // 拷贝构造
     string mystring;                                                    // 创建空字符串
     mystring = string_cStyle;                                           // 赋值操作符重载
     mystring = "aaa";                                                   // operator=(_In_z_ const _Elem* const _Ptr)
+
 }
 
+// 字符串操作
+void my_operator() {
+    string mystring = "0123456789A9876543210";
+    char A = mystring[10];
+    char c9 = mystring[9];
+    printf("char %c %c\n", A, c9);
+    string::size_type size = mystring.size();
+    string::size_type len = mystring.length();
+    printf("size, len %zu %zu\n", size, len);
+    const char* c_str = mystring.c_str();
+    char* data = mystring.data();
+    mystring.clear();
+    bool empty = mystring.empty();
+    printf("empty %d\n", empty);
+    mystring = "0123456789A9876543210";
+    mystring.erase();
+    empty = mystring.empty();
+    printf("empty %d\n", empty);
+    mystring = "0123456789A9876543210";
+    mystring.insert(11, "B");
+    printf("mystring %s\n", mystring.c_str());
+}
+
+void my_ostringstream() {
+    int myInt = 42;
+    double myDouble = 3.14;
+    float myFloat = 2.718f;
+    long myLong = 1234567890L;
+
+    std::stringstream intStream;
+    intStream << myInt;
+    std::string intString = intStream.str();
+
+    std::stringstream doubleStream;
+    doubleStream << myDouble;
+    std::string doubleString = doubleStream.str();
+
+    std::stringstream floatStream;
+    floatStream << myFloat;
+    std::string floatString = floatStream.str();
+
+    std::stringstream longStream;
+    longStream << myLong;
+    std::string longString = longStream.str();
+
+    std::cout << "Integer string: " << intString << std::endl;
+    std::cout << "Double string: " << doubleString << std::endl;
+    std::cout << "Float string: " << floatString << std::endl;
+    std::cout << "Long string: " << longString << std::endl;
+}
 // 字符串查找
 void my_find() {
     string mystring = "0123456789876543210";
@@ -28,8 +88,11 @@ void my_find() {
     std::string::size_type find_last_of_pos = mystring.find_last_of("92");    // 用于在字符串中查找最后一个与指定字符序列中的任何一个字符匹配的字符。
     printf("find_last_of %zu\n", find_last_of_pos);
 
-    std::string::size_type find_last_of_pos = mystring.find_first_not_of("92");    // 用于在字符串中查找最后一个与指定字符序列中的任何一个字符匹配的字符。
-    printf("find_last_of %zu\n", find_last_of_pos);
+    std::string::size_type find_first_not_of_pos = mystring.find_first_not_of("920");    // 用于在字符串中查找第一个与指定字符序列中的任何一个字符不匹配的字符。
+    printf("find_first_not_of_pos %zu\n", find_first_not_of_pos);
+
+    std::string::size_type find_last_not_of_pos = mystring.find_last_not_of("920");    // 用于在字符串中查找最后一个与指定字符序列中的任何一个字符不匹配的字符。
+    printf("find_first_not_of_pos %zu\n", find_last_not_of_pos);
 
 
 
@@ -81,7 +144,7 @@ void my_replace() {
 
 
 void test01string() {
-    my_find();
+    my_creat();
 }
 
 

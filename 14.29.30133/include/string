@@ -475,7 +475,7 @@ _Elem* _UIntegral_to_buff(_Elem* _RNext, _UTy _UVal) { // format _UVal into buff
     } while (_UVal_trunc != 0);
     return _RNext;
 }
-
+// _Elem: char
 template <class _Elem, class _Ty>
 basic_string<_Elem> _Integral_to_string(const _Ty _Val) { // convert _Val to string
     static_assert(is_integral_v<_Ty>, "_Ty must be integral");
