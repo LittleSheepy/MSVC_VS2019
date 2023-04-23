@@ -16,8 +16,8 @@ void my_creat() {
     string longString = to_string(myLong);
     string string_cStyle = "hello";                                     // C风格
     string string_cStyle2 = string("Hello, Hello, world!");             // C风格
-    string string_copy = string_cStyle;                            // 拷贝构造
-    string string_copy2 = string(string_cStyle);                   // 拷贝构造
+    string string_copy = string_cStyle;                                 // 拷贝构造
+    string string_copy2 = string(string_cStyle);                        // 拷贝构造
     string mystring;                                                    // 创建空字符串
     mystring = string_cStyle;                                           // 赋值操作符重载
     mystring = "aaa";                                                   // operator=(_In_z_ const _Elem* const _Ptr)
@@ -30,8 +30,8 @@ void my_operator() {
     char A = mystring[10];
     char c9 = mystring[9];
     printf("char %c %c\n", A, c9);
-    string::size_type size = mystring.size();
-    string::size_type len = mystring.length();
+    string::size_type size = mystring.size();                           // size()
+    string::size_type len = mystring.length();                          // length()
     printf("size, len %zu %zu\n", size, len);
     const char* c_str = mystring.c_str();
     char* data = mystring.data();
