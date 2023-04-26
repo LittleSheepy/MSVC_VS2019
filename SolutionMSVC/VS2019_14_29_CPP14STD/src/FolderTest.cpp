@@ -4,9 +4,32 @@
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 
-void FolderTest1() {
-    fs::create_directory("folder");
+void CreateFolder() {
+    bool result = fs::create_directory("folder");
+    printf("CreateFolder result = %s", result? "true":"false");
+}
+bool FolderExists(const std::string& folderName) {
+    return fs::exists(folderName);
+}
+void RenameFolder(const std::string& oldName, const std::string& newName) {
+    fs::rename(oldName, newName);
+}
+void RenameFolderTest() {
+    CreateFolder();
+    std::string oldName = "folder";
+    std::string newName = "folder_old";
+    RenameFolder(oldName, newName);
+}
+void CreateFolderWhileNot() {
+    std::string folderName = "folder";
+    if (FolderExists(folderName)) {
+        std::cout << "Folder exists" << std::endl;
+    }
+    else {
+        std::cout << "Folder does not exist" << std::endl;
+        CreateFolder();
+    }
 }
 void FolderTest() {
-    FolderTest1();
+    RenameFolderTest();
 }
