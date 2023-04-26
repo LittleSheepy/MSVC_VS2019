@@ -78,7 +78,9 @@ _INLINE_VAR constexpr bool is_same_v<_Ty, _Ty> = true;
 template <class _Ty1, class _Ty2>
 struct is_same : bool_constant<is_same_v<_Ty1, _Ty2>> {};
 #endif // __clang__
+/*
 
+*/
 template <class _Ty>
 struct remove_const { // remove top-level const qualifier
     using type = _Ty;
@@ -112,7 +114,7 @@ struct remove_cv { // remove top-level const and volatile qualifiers
     template <template <class> class _Fn>
     using _Apply = _Fn<_Ty>; // apply cv-qualifiers from the class template argument to _Fn<_Ty>
 };
-
+// 会生成一个const _Ty 的模板函数。const 类型的都会用这个，const _Ty的_Ty就去掉了const
 template <class _Ty>
 struct remove_cv<const _Ty> {
     using type = _Ty;
@@ -136,7 +138,7 @@ struct remove_cv<const volatile _Ty> {
     template <template <class> class _Fn>
     using _Apply = const volatile _Fn<_Ty>;
 };
-
+// 从给定类型中删除顶层const和volatile限定符
 template <class _Ty>
 using remove_cv_t = typename remove_cv<_Ty>::type;
 
@@ -170,7 +172,7 @@ _NODISCARD constexpr bool is_constant_evaluated() noexcept {
     return __builtin_is_constant_evaluated();
 }
 #endif // _HAS_CXX20
-
+// remove_cv_t<_Ty> 去掉_Ty 的const和volatile
 template <class _Ty>
 _INLINE_VAR constexpr bool is_integral_v = _Is_any_of_v<remove_cv_t<_Ty>, bool, char, signed char, unsigned char,
     wchar_t,

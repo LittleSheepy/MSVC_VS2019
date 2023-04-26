@@ -478,6 +478,7 @@ _Elem* _UIntegral_to_buff(_Elem* _RNext, _UTy _UVal) { // format _UVal into buff
 // _Elem: char
 template <class _Elem, class _Ty>
 basic_string<_Elem> _Integral_to_string(const _Ty _Val) { // convert _Val to string
+    // 断言 _Ty 类型是整形
     static_assert(is_integral_v<_Ty>, "_Ty must be integral");
     using _UTy = make_unsigned_t<_Ty>;
     _Elem _Buff[21]; // can hold -2^63 and 2^64 - 1, plus NUL

@@ -195,7 +195,19 @@ extern "C" {
                 "va_start argument must not have reference type and must not be parenthesized");
         };
     } // extern "C++"
-
+    /*
+    void CAlgBase::printf(const char* format, ...) {
+        char buf[125];
+        va_list args;
+        va_start(args, format);
+        vsprintf_s(buf, format, args);
+        va_end(args);
+        OutputDebugStringA(buf);
+    }
+    va_start函数用于初始化args变量，它接收两个参数，
+    第一个参数是可变参数列表的起始位置，
+    第二个参数是可变参数列表中最后一个已知的固定参数。
+    */
     #define __crt_va_start(ap, x) ((void)(__vcrt_assert_va_start_is_not_reference<decltype(x)>(), __crt_va_start_a(ap, x)))
 
 #else // ^^^ __cplusplus ^^^ // vvv !__cplusplus vvv //
