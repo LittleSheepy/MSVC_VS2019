@@ -30,6 +30,12 @@
     <ClCompile Include="src\test04ptr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\CriticalSectionTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VecAndLock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\testList.h">

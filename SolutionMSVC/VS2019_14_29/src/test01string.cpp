@@ -142,9 +142,28 @@ void my_replace() {
     cout << mystring << endl;
 }
 
+// 末尾添加字符
+void my_append() {
+    string mystring = "123456789";
+    mystring.append("a", 1);            // 向string 的后面加C-string 的一部分
+    cout << mystring << endl;
+    mystring.append("b");               // 向string 的后面加C-string
+    cout << mystring << endl;
+    string mystring2 = "c";
+    mystring.append(mystring2);
+    cout << mystring << endl; 
+    mystring2 = "cd";
+    mystring.append(mystring2, 1, 1);
+    cout << mystring << endl;
+    mystring2 = "de";
+    mystring.append(mystring2.begin() + 1, mystring2.end());
+    cout << mystring << endl;
+    mystring.append(1, 'f');
+    cout << mystring << endl;
+}
 
 void test01string() {
-    my_creat();
+    my_find();
 }
 
 
@@ -160,6 +179,7 @@ std::string 是 C++ 标准库中专门用来管理字符串的类，常用功能
 - std::string(const std::string& str)：拷贝构造函数，使用另一个字符串创建新字符串
 
 - operator=()：赋值操作符重载，可以将一个字符串赋值给另一个字符串
+- assign()
 
 2. 字符串操作
 
@@ -204,6 +224,7 @@ std::string 是 C++ 标准库中专门用来管理字符串的类，常用功能
 - operator+()：字符串相加，将两个字符串拼接为一个字符串
 
 - operator+=()：字符串相加，将另一个字符串拼接到当前字符串末尾
+append()
 
 5. 字符串的格式化输出
 

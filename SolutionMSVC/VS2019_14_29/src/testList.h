@@ -1,13 +1,16 @@
-#pragma once
-
-void my_creat();        // ´´½¨string 
-void my_replace();        // ´´½¨string 
+ï»¿#pragma once
+// å­—ç¬¦ä¸²
+void my_creat();        // åˆ›å»ºstring 
+void my_replace();        // åˆ›å»ºstring 
 void test01string();
 
-void myvect_creat();        // ´´½¨vector
+void myvect_creat();        // åˆ›å»ºvector
 void test02vector();
 
-void mylist_creat();        // ´´½¨list
+void mylist_creat();        // åˆ›å»ºlist
 void test03list();
+
+int VecAndLock();
+int CriticalSectioTest();       // ä¸´ç•ŒåŒº
 
 void test04ptr();

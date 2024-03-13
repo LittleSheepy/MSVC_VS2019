@@ -142,10 +142,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\CriticalSectionTest.cpp" />
     <ClCompile Include="src\test01string.cpp" />
     <ClCompile Include="src\test02vector.cpp" />
     <ClCompile Include="src\test03list.cpp" />
     <ClCompile Include="src\test04ptr.cpp" />
+    <ClCompile Include="src\VecAndLock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\testList.h" />
