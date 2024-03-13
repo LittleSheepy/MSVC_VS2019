@@ -5,7 +5,7 @@ using namespace std;
 
 int main(){
     SetConsoleOutputCP(65001);
-    test01string();
+    test04ptr();
     return 0;
 }
 

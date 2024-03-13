@@ -60,10 +60,10 @@ void myptr_release() {
     unique_ptr<int> pi(new int(1));
     cout << "p0:" << pO->Value() << endl;
     cout << *pi << endl;
-    //pO = pO2;								//编译不通过，不能拷贝构造或者赋值
-    pO = std::move(pO2);					//移动之后pO就析构掉了 p02指向null
-    //cout << pO2->Value() << endl;			 //错误：如果不注释掉就执行失败，因为pO2已经没有对象资源的所有权了
-    cout << pO->Value() << endl;
+    //pO = pO2;								// 编译不通过，不能拷贝构造或者赋值
+    pO = std::move(pO2);					// 移动之后pO就析构掉了 p02指向null
+    //cout << pO2->Value() << endl;			// 错误：如果不注释掉就执行失败，因为pO2已经没有对象资源的所有权了
+    cout << pO->Value() << endl;            // p0指向20
     int* p = pi.release();
     // cout << *pi << endl;					//错误：release之后也会释放资源的所有权
     cout << "*p=" << *p << endl; delete p;
