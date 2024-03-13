@@ -9,3 +9,5 @@ void test02vector();
 
 void mylist_creat();        // ´´½¨list
 void test03list();
+
+void test04ptr();
