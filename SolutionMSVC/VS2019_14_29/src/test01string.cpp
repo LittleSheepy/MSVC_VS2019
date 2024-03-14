@@ -163,7 +163,7 @@ void my_append() {
 }
 
 void test01string() {
-    my_find();
+    my_creat();
 }
 
 
