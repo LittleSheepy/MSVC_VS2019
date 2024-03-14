@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -9,34 +9,38 @@ public:
         m_name = name;
         std::cout << m_name << "    Test constructor.\n" << std::endl;
     }
+    Test(const char name[] ) {
+        m_name = name;
+        std::cout << m_name << "    Test constructor.\n" << std::endl;
+    }
     ~Test() {
         std::cout << m_name << "    Test destructor.\n" << std::endl;
     }
-    void print() {
-        std::cout << m_name << "    Hello, Test!\n" << std::endl;
+    void print(std::string pname="é»˜è®¤") {
+        std::cout << pname << ":" << m_name << "    Hello, Test!\n" << std::endl;
     }
     std::string m_name="test";
 };
 void myptr_creat() {
-    std::unique_ptr<Test> ptr1 = std::make_unique<Test>("ptr1");  // Í¨¹ı make_unique ´´½¨ unique_ptr
+    std::unique_ptr<Test> ptr1 = std::make_unique<Test>("ptr1");  // é€šè¿‡ make_unique åˆ›å»º unique_ptr
     ptr1->print();
 
-    std::unique_ptr<Test> ptr2 = std::unique_ptr<Test>(new Test("ptr2"));  // Í¨¹ı new ´´½¨ unique_ptr
+    std::unique_ptr<Test> ptr2 = std::unique_ptr<Test>(new Test("ptr2"));  // é€šè¿‡ new åˆ›å»º unique_ptr
     ptr2->print();
 
-    std::unique_ptr<Test> ptr21(new Test("ptr21"));  // Í¨¹ı new ´´½¨ unique_ptr
+    std::unique_ptr<Test> ptr21(new Test("ptr21"));  // é€šè¿‡ new åˆ›å»º unique_ptr
     ptr21->print();
 
-    std::unique_ptr<Test> ptr3 = std::move(ptr2);  // Í¨¹ı´«µİÒÑÓĞ unique_ptr ´´½¨ĞÂµÄ unique_ptr (ÒÆ¶¯¹¹Ôìº¯Êı)
+    std::unique_ptr<Test> ptr3 = std::move(ptr2);  // é€šè¿‡ä¼ é€’å·²æœ‰ unique_ptr åˆ›å»ºæ–°çš„ unique_ptr (ç§»åŠ¨æ„é€ å‡½æ•°)
     ptr3->print();
-    std::cout << "ptr2: " << (ptr2 ? "not null" : "null") << '\n\n' << std::endl;
+    std::cout << "ptr2: " << (ptr2 ? "not null" : "null") << '\n\n' << std::endl;   // ç”¨äºæ£€æŸ¥unique_ptræ˜¯å¦æ‹¥æœ‰ä¸€ä¸ªå¯¹è±¡ã€‚
 
-    // unique_ptr¶ÔÏóËùÓĞÈ¨µÄ×ªÒÆ move
-    std::unique_ptr<Test> ptr60(new Test("ptr60"));  // Í¨¹ı new ´´½¨ unique_ptr
-    std::unique_ptr<Test> ptr61;     // Ä¬ÈÏ¹¹ÔìÁËÒ»¸ö¿ÕµÄunique_ptr¶ÔÏó
+    // unique_ptrå¯¹è±¡æ‰€æœ‰æƒçš„è½¬ç§» move
+    std::unique_ptr<Test> ptr60(new Test("ptr60"));  // é€šè¿‡ new åˆ›å»º unique_ptr
+    std::unique_ptr<Test> ptr61;     // é»˜è®¤æ„é€ äº†ä¸€ä¸ªç©ºçš„unique_ptrå¯¹è±¡
     ptr61 = std::move(ptr60);
     ptr61->print();
-    // ÎªÊ²Ã´Ê¹ÓÃmoveºó¿ÉÒÔ½øĞĞptr_3µÄ¹¹Ôì£¬ÊÇÒòÎªunique_ptrÀàÖĞ½öº¬ÓĞÒ»¸ö²ÎÊıÎªÓÒÖµÒıÓÃµÄ¿½±´¹¹ÔìÆ÷
+    // ä¸ºä»€ä¹ˆä½¿ç”¨moveåå¯ä»¥è¿›è¡Œptr_3çš„æ„é€ ï¼Œæ˜¯å› ä¸ºunique_ptrç±»ä¸­ä»…å«æœ‰ä¸€ä¸ªå‚æ•°ä¸ºå³å€¼å¼•ç”¨çš„æ‹·è´æ„é€ å™¨
     unique_ptr<Test> ptr62(move(ptr61));
     ptr62->print();
 
@@ -46,14 +50,14 @@ void myptr_creat() {
     ptr1 = std::move(ptr3);
     ptr1->print();
 
-    std::unique_ptr<Test> ptr5(nullptr);        // ÏÔÊ½¹¹ÔìÁËÒ»¸ö¿ÕµÄunique_ptr¶ÔÏó
+    std::unique_ptr<Test> ptr5(nullptr);        // æ˜¾å¼æ„é€ äº†ä¸€ä¸ªç©ºçš„unique_ptrå¯¹è±¡
     ptr5 = std::move(ptr1);
     ptr5->print();
     std::cout << "\n\n";
 
-    // Ñ­»·
+    // å¾ªç¯
     vector<unique_ptr<Test>> ptrs(4);
-    for (auto& ptr : ptrs) { // error ÔöÇ¿forÑ­»·¹ı³ÌÖĞ»ácopyÃ¿Ò»¸öÔªËØ£¬¿ÉÒÔ¼Ó& Ê¹ÓÃÒıÓÃ£¬ÒıÓÃ²»copy
+    for (auto& ptr : ptrs) { // error å¢å¼ºforå¾ªç¯è¿‡ç¨‹ä¸­ä¼šcopyæ¯ä¸€ä¸ªå…ƒç´ ï¼Œå¯ä»¥åŠ & ä½¿ç”¨å¼•ç”¨ï¼Œå¼•ç”¨ä¸copy
         ptr = std::unique_ptr<Test>(new Test("ptr7"));
         ptr->print();
         ptr->m_name = "ptrs";
@@ -61,52 +65,80 @@ void myptr_creat() {
     }
     //unique_ptr<Test> ptr8 = make_unique<Test>("ptr8");
     //vector<unique_ptr<Test>> v;
-    //v.push_back(ptr8); // error push_back»á¿½±´Ò»·İ¸±±¾·Å½øvector	
+    //v.push_back(ptr8); // error push_backä¼šæ‹·è´ä¸€ä»½å‰¯æœ¬æ”¾è¿›vector	
 }
 
+// ç”¨äºé‡Šæ”¾unique_ptrå½“å‰æ‹¥æœ‰çš„å¯¹è±¡ï¼Œå¹¶å¯é€‰åœ°æ¥ç®¡æ–°çš„å¯¹è±¡ã€‚
+void myptr_reset() {
+    unique_ptr<Test> ptr01(new Test("ptr01"));
+    unique_ptr<Test> ptr02(new Test("ptr02"));
+    Test* test01 = new Test("test01");
+    ptr01.reset(test01);
+    ptr01->print();
+}
 
-class Object
-{
-private:
-    int value;
-public:
-    Object(int val = 0) :value(val) { cout << "construct Object:" << value << endl; }
-    ~Object() { cout << "destruct Object:" << value << endl; }
-    int Value() { return value; }
-    const int  Value() const { return value; }
+// è¿”å›å­˜å‚¨çš„è£¸æŒ‡é’ˆï¼Œä¸æ”¹å˜æ‰€æœ‰æƒã€‚
+void myptr_get() {
+    unique_ptr<Test> ptr01(new Test("ptr01"));
+    Test* test01 = ptr01.get();
+    test01->print();
+    ptr01->print();
+}
 
-};
+// äº¤æ¢ä¸¤ä¸ªunique_ptræ‰€æ‹¥æœ‰çš„å¯¹è±¡ã€‚
+void myptr_swap() {
+    unique_ptr<Test> ptr01(new Test("ptr01"));
+    unique_ptr<Test> ptr02(new Test("ptr02"));
+    ptr01.swap(ptr02);
+    ptr01->print();
+    ptr02->print();
+}
+
+//class Object
+//{
+//private:
+//    int value;
+//public:
+//    Object(int val = 0) :value(val) { cout << "construct Object:" << value << endl; }
+//    ~Object() { cout << "destruct Object:" << value << endl; }
+//    int Value() { return value; }
+//    const int  Value() const { return value; }
+//
+//};
+// é‡Šæ”¾unique_ptrçš„æ‰€æœ‰æƒï¼Œå¹¶è¿”å›è£¸æŒ‡é’ˆï¼Œä¹‹åunique_ptrå°†ä¸ºç©ºã€‚
 void myptr_release() {
-    unique_ptr<Object> pO(new Object(10));
-    unique_ptr<Object> pO2(new Object(20));
-    unique_ptr<int> pi(new int(1));
-    cout << "p0:" << pO->Value() << endl;
-    cout << *pi << endl;
-    //pO = pO2;								// ±àÒë²»Í¨¹ı£¬²»ÄÜ¿½±´¹¹Ôì»òÕß¸³Öµ
-    pO = std::move(pO2);					// ÒÆ¶¯Ö®ºópO¾ÍÎö¹¹µôÁË p02Ö¸Ïònull
-    //cout << pO2->Value() << endl;			// ´íÎó£ºÈç¹û²»×¢ÊÍµô¾ÍÖ´ĞĞÊ§°Ü£¬ÒòÎªpO2ÒÑ¾­Ã»ÓĞ¶ÔÏó×ÊÔ´µÄËùÓĞÈ¨ÁË
-    cout << pO->Value() << endl;            // p0Ö¸Ïò20
-    int* p = pi.release();                  // piÖ¸Ïòempty
-    // cout << *pi << endl;					// ´íÎó£ºreleaseÖ®ºóÒ²»áÊÍ·Å×ÊÔ´µÄËùÓĞÈ¨
+    unique_ptr<Test> ptr0(new Test("ptr0"));
+    unique_ptr<Test> ptr02(new Test("ptr02"));
+    unique_ptr<int> pint(new int(1));
+    ptr0->print("ptr0");
+    cout << *pint << endl;
+    //pO = pO2;								// ç¼–è¯‘ä¸é€šè¿‡ï¼Œä¸èƒ½æ‹·è´æ„é€ æˆ–è€…èµ‹å€¼
+    ptr0 = std::move(ptr02);					// ç§»åŠ¨ä¹‹åpOå°±ææ„æ‰äº† p02æŒ‡å‘null
+    //cout << pO2->Value() << endl;			// é”™è¯¯ï¼šå¦‚æœä¸æ³¨é‡Šæ‰å°±æ‰§è¡Œå¤±è´¥ï¼Œå› ä¸ºpO2å·²ç»æ²¡æœ‰å¯¹è±¡èµ„æºçš„æ‰€æœ‰æƒäº†
+    ptr0->print("ptr0");            // p0æŒ‡å‘20
+    int* p = pint.release();                  // piæŒ‡å‘empty
+    // cout << *pi << endl;					// é”™è¯¯ï¼šreleaseä¹‹åä¹Ÿä¼šé‡Šæ”¾èµ„æºçš„æ‰€æœ‰æƒ
     cout << "*p=" << *p << endl; delete p;  // 1
 
     cout << endl;
     unique_ptr<int[]> ps1(new int[10]{ 1,2,3,4,5,6,7,8,9,10 });
-    //cout << *ps1 << endl;    ÌØ»¯°æ±¾²»ÖØÔØ* ->
+    //cout << *ps1 << endl;    ç‰¹åŒ–ç‰ˆæœ¬ä¸é‡è½½* ->
     for (int i = 0; i < 10; i++)
     {
         cout << ps1[i] << " ";
     }
     cout << endl;
-    Object* Obj = new Object[]{ 1000,2000,3000 };
+    Test* Obj = new Test[]{ "prob10","prob11","prob12" };
     delete[]Obj;
-    unique_ptr<Object[] > pobj(new Object[]{ 100,200,300 });
+    unique_ptr<Test[] > pobj(new Test[]{ "prob0","prob1","prob2"});
 
-    cout << pobj[0].Value() << endl;
+    cout << "pobj[0]: " << pobj[0].m_name << endl;
 }
 
-
 void test04ptr() {
-    myptr_creat();
-    //myptr_release();
+    //myptr_creat();
+    //myptr_reset();
+    //myptr_get();
+    //myptr_swap();
+    myptr_release();
 }
