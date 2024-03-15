@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\FolderTest.cpp" />
+    <ClCompile Include="src\TimeTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\functions.h" />
