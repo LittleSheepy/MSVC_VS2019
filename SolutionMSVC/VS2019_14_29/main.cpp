@@ -1,12 +1,17 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include <cstdio>
+#include <iostream>
 #include "src/testList.h"
+
 using namespace std;
 
 int main(){
-    SetConsoleOutputCP(65001);
+    //SetConsoleOutputCP(CP_UTF8);
+    SetConsoleOutputCP(936);
+
     //test01string();
-    test04ptr();
+    test02vector();
+    //test04ptr();
     return 0;
 }
 

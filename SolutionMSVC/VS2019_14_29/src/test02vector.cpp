@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <vector>
+
 using namespace std;
+
 template<typename T>
 void print(vector<T>& v)//打印模板函数
 {
